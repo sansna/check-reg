@@ -1,5 +1,6 @@
 #include "check.h"
 
+//from lpstrurl find the lpstrfind line, through nbias chars find the *p through *lpstrnorm
 int cr_nscanf(char *lpstrurl,char *lpstrfind, int nbias, char *lpstrnorm, void *p)
 {
     char *lpstrCommand = (char *)malloc(1000);
@@ -33,6 +34,7 @@ int cr_nscanf(char *lpstrurl,char *lpstrfind, int nbias, char *lpstrnorm, void *
     return 0;
 }
 
+//from file lpstrfileName count the number of lines in it
 int cr_fcountLines(char *lpstrfileName)
 {
     FILE *pFile = NULL;
@@ -58,6 +60,7 @@ int cr_fcountLines(char *lpstrfileName)
     return ncount;
 }
 
+//from lpstrurl count matches of lpstrrule
 int cr_ncountMatches(char *lpstrurl, char *lpstrrule)
 {
     char *lpstrCommand = (char *)malloc(1000);
@@ -84,6 +87,7 @@ int cr_ncountMatches(char *lpstrurl, char *lpstrrule)
     return ncount;
 }
 
+//linux ver of int to char
 char *itoa(int n)
 {
     char *buf = (char *)malloc(12);
@@ -91,6 +95,7 @@ char *itoa(int n)
     return buf;
 }
 
+//through api lpstrurl using lpstrauth, creating lpstrpatter+nprev repo
 int cr_ncreatRecord(char *lpstrurl,char *lpstrauth,char *lpstrpattern, int nprev)
 {
     char *lpstrCommand = (char *)malloc(1000);
@@ -107,25 +112,32 @@ int cr_ncreatRecord(char *lpstrurl,char *lpstrauth,char *lpstrpattern, int nprev
     return 0;
 }
 
-int cr_nabletoReg(char *lpstrrule)
+//from lpstrscanhtml get lpstrpattern line, moving nbias getting pn, 
+//from lpstrgethtml matching lpstrmatchpattern count
+//compare if still able to reg return = registed count >= 0
+//else return = -1
+int cr_nabletoReg(
+        char *lpstrscanhtml,
+        char *lpstrpattern, 
+        int nbias, 
+        char *lpstrgethtml, 
+        char *lpstrmatchpattern
+        )
 {
     int *pn = (int *)malloc(sizeof(int));
-    char *lpstrreponame = (char *)malloc(20);
     int ncount = 0;
     cr_nscanf(
-            (char *)"http://www.cnblogs.com/sansna/p/5287820.html",
-            (char *)"live:",
-            8,
+            lpstrscanhtml,
+            lpstrpattern,
+            nbias,
             (char *)"\"\%d\"",
             pn
             );
-    strcpy(lpstrreponame,"\\\"name\\\":\\\"");
-    strcpy(END_OF_LPSTR(lpstrreponame),lpstrrule);
     ncount = cr_ncountMatches(
-            (char *)"https://api.github.com/users/softinstall/repos",
-            lpstrreponame
+            lpstrgethtml,
+            lpstrmatchpattern
             );
     if (ncount < *pn)
         return ncount;
-    return 0;
+    return -1;
 }

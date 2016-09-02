@@ -10,5 +10,5 @@ int cr_fcountLines(char *lpstrfileName);
 int cr_ncountMatches(char *lpstrurl, char *lpstrrule);
 char *itoa(int n);
 int cr_ncreatRecord(char *lpstrurl,char *lpstrauth,char *lpstrpattern, int nprev);
-int cr_nabletoReg(char *lpstrrule);
+int cr_nabletoReg( char *lpstrscanhtml, char *lpstrpattern, int nbias, char *lpstrgethtml, char *lpstrmatchpattern);
 
