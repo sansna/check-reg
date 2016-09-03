@@ -1,15 +1,19 @@
 #include "nreg.h"
-#include "check.h"
 
 //create a file for each computer under %userprofile% as registration
 int reg_file()
 {
     int ncount = 0;
     FILE *pFile = NULL;
+    char *lpstrreviewPath = (char*)malloc(100);
+
     system("getmac > __review");
     ncount = cr_fcountLines((char *)"__review");
-    if (NULL == (pFile = fopen("\%userprofile\%/__review","w")))
+    strcpy(lpstrreviewPath,getenv("USERPROFILE"));
+    strcpy(END_OF_LPSTR(lpstrreviewPath),"/__review");
+    if (NULL == (pFile = fopen(lpstrreviewPath,"w")))
     {
+        system("getmac > __error");
         perror("error");
         exit(0);
     }
@@ -30,9 +34,13 @@ int check_reg()
     FILE *pFile = NULL;
     int ncount = 0;
     int n = 0;
+    char *lpstrreviewPath = (char*)malloc(100);
+
     system("getmac > __review");
     ncount = cr_fcountLines((char *)"__review");
-    if (NULL == (pFile = fopen("\%userprofile\%/__review","r")))
+    strcpy(lpstrreviewPath,getenv("USERPROFILE"));
+    strcpy(END_OF_LPSTR(lpstrreviewPath),"/__review");
+    if (NULL == (pFile = fopen(lpstrreviewPath,"r")))
         return 0;
 
     fscanf(pFile,"%d",&n);
@@ -64,7 +72,7 @@ int nreg(
 {
     int ret = 0;
     char *lpstrcompare = (char *)malloc(100);
-    strcpy(lpstrcompare,"\\\"name\\\":\\\"");
+    strcpy(lpstrcompare,"\"\\\"name\\\":\"|findstr ");
     strcpy(END_OF_LPSTR(lpstrcompare),lpstrrule);
     ret = cr_nabletoReg(
             lpstrscanhtml,

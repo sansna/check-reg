@@ -5,15 +5,15 @@ int cr_nscanf(char *lpstrurl,char *lpstrfind, int nbias, char *lpstrnorm, void *
 {
     char *lpstrCommand = (char *)malloc(1000);
     FILE *pFile = NULL;
-    strcpy(lpstrCommand,"curl -i ");
+    strcpy(lpstrCommand,(char *)"curl -i ");
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrurl);
 #ifdef _WIN32
-    strcpy(END_OF_LPSTR(lpstrCommand)," |findstr ");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" |findstr ");
 #elif defined(_LINUX)
-    strcpy(END_OF_LPSTR(lpstrCommand)," |grep ");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" |grep ");
 #endif
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrfind);
-    strcpy(END_OF_LPSTR(lpstrCommand)," > __review");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" > __review");
     system(lpstrCommand);
     free(lpstrCommand);
 
@@ -50,7 +50,7 @@ int cr_fcountLines(char *lpstrfileName)
     {
         if (c == '\r'||c == '\n')
         {
-            fseek(pFile,1,SEEK_CUR);
+            //fseek(pFile,1,SEEK_CUR);
             ncount ++;
         }
     }
@@ -66,19 +66,20 @@ int cr_ncountMatches(char *lpstrurl, char *lpstrrule)
     char *lpstrCommand = (char *)malloc(1000);
     FILE *pFile = NULL;
     int ncount = 0;
-    strcpy(lpstrCommand,"curl ");
+    strcpy(lpstrCommand,(char *)"curl ");
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrurl);
 #ifdef _WIN32
-    strcpy(END_OF_LPSTR(lpstrCommand)," |findstr ");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" |findstr ");
 #elif defined(_LINUX)
-    strcpy(END_OF_LPSTR(lpstrCommand)," |grep ");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" |grep ");
 #endif
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrrule);
-    strcpy(END_OF_LPSTR(lpstrCommand)," > __review");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" > __review");
+
+    system(lpstrCommand);
 
     ncount = cr_fcountLines((char *)"__review");
 
-    fclose(pFile);
 #ifdef _WIN32
     system("del __review");
 #elif defined(_LINUX)
@@ -88,7 +89,7 @@ int cr_ncountMatches(char *lpstrurl, char *lpstrrule)
 }
 
 //linux ver of int to char
-char *itoa(int n)
+char *cr_itoa(int n)
 {
     char *buf = (char *)malloc(12);
     snprintf(buf,11,"%d",n);
@@ -99,15 +100,17 @@ char *itoa(int n)
 int cr_ncreatRecord(char *lpstrurl,char *lpstrauth,char *lpstrpattern, int nprev)
 {
     char *lpstrCommand = (char *)malloc(1000);
-    strcpy(lpstrCommand,"curl ");
-    strcpy(END_OF_LPSTR(lpstrCommand),"-u ");
+    strcpy(lpstrCommand,(char *)"curl ");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)"-u ");
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrauth);
-    strcpy(END_OF_LPSTR(lpstrCommand)," ");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" ");
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrurl);
-    strcpy(END_OF_LPSTR(lpstrCommand)," -d \"{\\\"name\\\":\\\"");
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)" -d \"{\\\"name\\\":\\\"");
     strcpy(END_OF_LPSTR(lpstrCommand),lpstrpattern);
-    strcpy(END_OF_LPSTR(lpstrCommand),itoa(nprev));
-    strcpy(END_OF_LPSTR(lpstrCommand),"\\\"}\"");
+    strcpy(END_OF_LPSTR(lpstrCommand),cr_itoa(nprev));
+    strcpy(END_OF_LPSTR(lpstrCommand),(char *)"\\\"}\"");
+
+    system(lpstrCommand);
 
     return 0;
 }
@@ -126,12 +129,14 @@ int cr_nabletoReg(
 {
     int *pn = (int *)malloc(sizeof(int));
     int ncount = 0;
+    char *lpstrtest = (char*)malloc(100);
+    *pn = 0;
     cr_nscanf(
             lpstrscanhtml,
             lpstrpattern,
             nbias,
-            (char *)"\"\%d\"",
-            pn
+            (char *)"%d",
+            (void*)pn
             );
     ncount = cr_ncountMatches(
             lpstrgethtml,
