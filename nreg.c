@@ -71,6 +71,7 @@ int nreg(
         )
 {
     int ret = 0;
+    int ret2 = 0;
     char *lpstrcompare = (char *)malloc(100);
     strcpy(lpstrcompare,"\"\\\"name\\\":\"|findstr ");
     strcpy(END_OF_LPSTR(lpstrcompare),lpstrrule);
@@ -96,6 +97,15 @@ int nreg(
             lpstrrule,
             ret
             );
+    ret2 = cr_nabletoReg(
+            lpstrscanhtml,
+            lpstrpattern,
+            nbias,
+            lpstrgethtml,
+            lpstrcompare
+            );
+    if (ret=ret2)
+        return 1;
     //cr_ncreatRecord(
     //        (char *)"https://api.github.com/user/repos",
     //        (char *)"s
