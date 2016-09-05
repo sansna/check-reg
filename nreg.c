@@ -97,15 +97,16 @@ int nreg(
             lpstrrule,
             ret
             );
-    ret2 = cr_nabletoReg(
-            lpstrscanhtml,
-            lpstrpattern,
-            nbias,
-            lpstrgethtml,
-            lpstrcompare
-            );
-    if (ret=ret2)
-        return 1;
+    while (ret2 == ret)
+    {
+        ret2 = cr_nabletoReg(
+                lpstrscanhtml,
+                lpstrpattern,
+                nbias,
+                lpstrgethtml,
+                lpstrcompare
+                );
+    }
     //cr_ncreatRecord(
     //        (char *)"https://api.github.com/user/repos",
     //        (char *)"s
